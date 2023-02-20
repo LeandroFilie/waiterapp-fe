@@ -147,5 +147,10 @@ export const Button = styled.button<ButtonProps>`
   justify-content: center;
   gap: 0.5rem;
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   ${({ variant }) => variant === 'primary' ? ButtonVariants.primary : ButtonVariants.secondary}
 `;
