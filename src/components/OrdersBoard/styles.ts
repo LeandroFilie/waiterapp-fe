@@ -10,7 +10,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  header {
+  > header {
     padding: 0.5rem;
     font-size: 0.85rem;
     display: flex;
