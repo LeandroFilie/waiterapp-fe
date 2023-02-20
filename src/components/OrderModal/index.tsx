@@ -10,13 +10,17 @@ interface OrderModalProps {
   order: Order | null;
   onClose: () => void;
   onCancelOrder: () => Promise<void>;
+  onChangeOrderStatus: () => void;
   isLoading: boolean;
 }
 
-export function OrderModal({visible, order, onClose, onCancelOrder, isLoading}: OrderModalProps){
-  if(!visible || !order){
-    return null;
-  }
+export function OrderModal({
+  visible,
+  order,
+  onClose,
+  onCancelOrder,
+  onChangeOrderStatus,
+  isLoading }: OrderModalProps){
 
   useEffect(() => {
     function onCloseKeyEsc(event: KeyboardEvent){
@@ -31,6 +35,10 @@ export function OrderModal({visible, order, onClose, onCancelOrder, isLoading}: 
       document.removeEventListener('keydown', onCloseKeyEsc);
     };
   }, [onClose]);
+
+  if(!visible || !order){
+    return null;
+  }
 
   const total = order.products.reduce((total, { product, quantity }) => {
     return total + (product.price * quantity);
@@ -92,10 +100,18 @@ export function OrderModal({visible, order, onClose, onCancelOrder, isLoading}: 
         </OrderDetails>
 
         <Actions>
-          <Button variant="primary" disabled={isLoading}>
-            <span>🧑‍🍳</span>
-            <strong>Iniciar Produção</strong>
-          </Button>
+          {order.status !== 'DONE' && (
+            <Button variant="primary" disabled={isLoading} onClick={onChangeOrderStatus}>
+              <span>
+                {order.status === 'WAITING' && '🧑‍🍳'}
+                {order.status === 'IN_PRODUCTION' && '✅'}
+              </span>
+              <strong>
+                {order.status === 'WAITING' && 'Iniciar Produção'}
+                {order.status === 'IN_PRODUCTION' && 'Concluir Pedido'}
+              </strong>
+            </Button>
+          )}
 
           <Button variant="secondary" onClick={onCancelOrder} disabled={isLoading}>
             <strong>Cancelar Pedido</strong>
